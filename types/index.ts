@@ -13,10 +13,10 @@ export type CommitmentStatus = Database['public']['Enums']['commitment_status']
 
 // Joined тип для UI — БД джойны не знает, это наша логика
 export type Commitment = CommitmentRow & {
-  project?: Project
-  author?: Profile
-  responsible_executor?: Profile
-  responsible_checker?: Profile
+  project?: Project | null
+  author?: Profile | null
+  responsible_executor?: Profile | null
+  responsible_checker?: Profile | null
 }
 
 // Тип для формы — Insert без автогенерируемых полей
