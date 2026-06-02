@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Status Check",
   description: "Track commitments and deadlines",
+  icons: { icon: '/logo.png' },
 };
 
 export default function RootLayout({

@@ -65,10 +65,10 @@ export default function CommitmentModal({ isOpen, onClose, commitment, defaultDe
 
   return (
     <Dialog open={isOpen} onOpenChange={open => !open && handleClose()}>
-      <DialogContent className="bg-card border border-border rounded-lg shadow-2xl shadow-black/20 text-foreground sm:max-w-lg max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:right-0 max-sm:top-auto max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-2xl max-sm:rounded-b-none max-sm:max-h-[85vh] max-sm:overflow-y-auto">
+      <DialogContent className="bg-card border border-border text-foreground sm:max-w-lg sm:rounded-lg sm:shadow-2xl sm:shadow-black/20 max-sm:fixed max-sm:inset-x-0 max-sm:bottom-0 max-sm:top-auto max-sm:left-0 max-sm:right-0 max-sm:w-full max-sm:max-w-full max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-2xl max-sm:rounded-b-none max-sm:max-h-[90vh] max-sm:overflow-y-auto max-sm:border-x-0 max-sm:border-b-0" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <DialogHeader>
           {mode === 'view' && commitment ? (
-            <div className="flex items-start justify-between gap-3 pr-6">
+            <div className="flex items-start gap-2 pr-6">
               <DialogTitle className="text-foreground font-bold text-lg tracking-tight leading-snug">
                 {commitment.title}
               </DialogTitle>

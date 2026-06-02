@@ -15,6 +15,8 @@ const STATUS_COLORS: Record<CommitmentStatus, string> = {
   ideas_backlog: '#A855F7',
 }
 
+const DARK_STATUSES: CommitmentStatus[] = ['not_actual', 'ideas_backlog']
+
 interface Props {
   commitments: Commitment[]
   onEventClick: (commitment: Commitment) => void
@@ -29,7 +31,7 @@ export default function CalendarView({ commitments, onEventClick, onDateClick }:
       title: c.title,
       start: c.deadline!,
       backgroundColor: STATUS_COLORS[c.status],
-      borderColor: 'transparent',
+      borderColor: DARK_STATUSES.includes(c.status) ? 'rgba(255,255,255,0.15)' : 'transparent',
       extendedProps: { commitment: c },
     }))
 
@@ -48,6 +50,7 @@ export default function CalendarView({ commitments, onEventClick, onDateClick }:
           onEventClick(arg.event.extendedProps.commitment as Commitment)
         }
         dateClick={(arg) => onDateClick(arg.dateStr)}
+        eventClassNames="rounded-md overflow-hidden mb-0.5"
         eventContent={(info) => (
           <CommitmentEvent
             title={info.event.title}
