@@ -39,14 +39,16 @@ export default function CalendarView({ commitments, onEventClick, onDateClick }:
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek',
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,dayGridWeek",
         }}
         events={events}
-        eventClick={arg => onEventClick(arg.event.extendedProps.commitment as Commitment)}
-        dateClick={arg => onDateClick(arg.dateStr)}
-        eventContent={info => (
+        eventClick={(arg) =>
+          onEventClick(arg.event.extendedProps.commitment as Commitment)
+        }
+        dateClick={(arg) => onDateClick(arg.dateStr)}
+        eventContent={(info) => (
           <CommitmentEvent
             title={info.event.title}
             status={(info.event.extendedProps.commitment as Commitment).status}
@@ -57,5 +59,5 @@ export default function CalendarView({ commitments, onEventClick, onDateClick }:
         dayMaxEvents={3}
       />
     </div>
-  )
+  );
 }

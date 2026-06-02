@@ -17,7 +17,7 @@ export default function ThemeToggle() {
       aria-label="Toggle theme"
       className="text-muted-foreground hover:text-foreground transition-colors duration-150 cursor-pointer p-1"
     >
-      {theme === 'dark' ? <SunIcon size={15} /> : <MoonIcon size={15} />}
+      {theme === 'dark' ? <SunIcon size={22} /> : <MoonIcon size={22} />}
     </button>
   )
 }

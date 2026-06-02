@@ -48,50 +48,50 @@ export default function RegisterForm() {
     <div className="w-full max-w-sm">
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Status Check</h1>
-        <p className="text-sm text-[#888] mt-1">Create your account</p>
+        <p className="text-sm text-muted-foreground mt-1">Create your account</p>
       </div>
 
-      <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-md p-6">
+      <div className="bg-card border border-border rounded-md p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider text-[#888]">Full name</Label>
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Full name</Label>
             <Input
               {...register('full_name')}
               placeholder="John Doe"
-              className="bg-[#0F0F0F] border-[#2A2A2A] focus-visible:ring-[#3BFF6B] focus-visible:ring-1 focus-visible:border-[#3BFF6B]"
+              className="bg-background border-border focus-visible:ring-primary focus-visible:ring-1 focus-visible:border-primary"
             />
             {errors.full_name && <p className="text-xs text-red-400">{errors.full_name.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider text-[#888]">Email</Label>
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Email</Label>
             <Input
               {...register('email')}
               type="email"
               placeholder="you@example.com"
-              className="bg-[#0F0F0F] border-[#2A2A2A] focus-visible:ring-[#3BFF6B] focus-visible:ring-1 focus-visible:border-[#3BFF6B]"
+              className="bg-background border-border focus-visible:ring-primary focus-visible:ring-1 focus-visible:border-primary"
             />
             {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider text-[#888]">Password</Label>
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Password</Label>
             <Input
               {...register('password')}
               type="password"
               placeholder="••••••••"
-              className="bg-[#0F0F0F] border-[#2A2A2A] focus-visible:ring-[#3BFF6B] focus-visible:ring-1 focus-visible:border-[#3BFF6B]"
+              className="bg-background border-border focus-visible:ring-primary focus-visible:ring-1 focus-visible:border-primary"
             />
             {errors.password && <p className="text-xs text-red-400">{errors.password.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs uppercase tracking-wider text-[#888]">Confirm password</Label>
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">Confirm password</Label>
             <Input
               {...register('confirm_password')}
               type="password"
               placeholder="••••••••"
-              className="bg-[#0F0F0F] border-[#2A2A2A] focus-visible:ring-[#3BFF6B] focus-visible:ring-1 focus-visible:border-[#3BFF6B]"
+              className="bg-background border-border focus-visible:ring-primary focus-visible:ring-1 focus-visible:border-primary"
             />
             {errors.confirm_password && <p className="text-xs text-red-400">{errors.confirm_password.message}</p>}
           </div>
@@ -106,7 +106,7 @@ export default function RegisterForm() {
         </form>
       </div>
 
-      <p className="text-center text-sm text-[#888] mt-4">
+      <p className="text-center text-sm text-muted-foreground mt-4">
         Already have an account?{' '}
         <Link href="/login" className="text-[#3BFF6B] hover:underline">
           Sign in

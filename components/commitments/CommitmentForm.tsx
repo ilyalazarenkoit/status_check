@@ -7,6 +7,7 @@ import type { z } from 'zod'
 import type { Commitment, Project, Profile } from '@/types'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
 
 type FormValues = z.infer<typeof commitmentSchema>
 
@@ -46,7 +47,7 @@ export default function CommitmentForm({ commitment, defaultDeadline, projects, 
       responsible_executor_id: commitment?.responsible_executor_id ?? null,
       responsible_checker_id: commitment?.responsible_checker_id ?? null,
       deadline: commitment?.deadline
-        ? new Date(commitment.deadline).toISOString().slice(0, 16)
+        ? format(new Date(commitment.deadline), "yyyy-MM-dd'T'HH:mm")
         : defaultDeadline ?? '',
     },
   })

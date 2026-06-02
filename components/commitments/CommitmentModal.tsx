@@ -6,7 +6,8 @@ import CommitmentForm from './CommitmentForm'
 import StatusBadge from './StatusBadge'
 import type { Commitment, Project, Profile } from '@/types'
 import { toast } from 'sonner'
-import { format } from 'date-fns'
+import { format, formatDistanceToNow, isPast, isToday } from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
 
 interface Props {
   isOpen: boolean
@@ -60,40 +61,50 @@ export default function CommitmentModal({ isOpen, onClose, commitment, defaultDe
     onSuccess()
   }
 
-  const title = mode === 'create' ? 'New Commitment' : mode === 'edit' ? 'Edit Commitment' : 'Commitment'
+  const title = mode === 'create' ? 'New Commitment' : 'Edit Commitment'
 
   return (
     <Dialog open={isOpen} onOpenChange={open => !open && handleClose()}>
-      <DialogContent className="bg-card border border-border rounded-lg shadow-2xl shadow-black/20 text-foreground sm:max-w-lg max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:right-0 max-sm:top-auto max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-2xl max-sm:rounded-b-none">
+      <DialogContent className="bg-card border border-border rounded-lg shadow-2xl shadow-black/20 text-foreground sm:max-w-lg max-sm:fixed max-sm:bottom-0 max-sm:left-0 max-sm:right-0 max-sm:top-auto max-sm:translate-x-0 max-sm:translate-y-0 max-sm:rounded-t-2xl max-sm:rounded-b-none max-sm:max-h-[85vh] max-sm:overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-foreground font-bold text-lg tracking-tight">{title}</DialogTitle>
+          {mode === 'view' && commitment ? (
+            <div className="flex items-start justify-between gap-3 pr-6">
+              <DialogTitle className="text-foreground font-bold text-lg tracking-tight leading-snug">
+                {commitment.title}
+              </DialogTitle>
+              <div className="shrink-0 mt-0.5">
+                <StatusBadge status={commitment.status} />
+              </div>
+            </div>
+          ) : (
+            <DialogTitle className="text-foreground font-bold text-lg tracking-tight">
+              {title}
+            </DialogTitle>
+          )}
         </DialogHeader>
 
         {mode === 'view' && commitment ? (
-          <div className="space-y-4">
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Title</p>
-              <p className="text-foreground text-sm">{commitment.title}</p>
-            </div>
-
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Status</p>
-              <StatusBadge status={commitment.status} />
-            </div>
+          <div className="space-y-4 max-sm:pb-4">
 
             {commitment.description && (
-              <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Description</p>
-                <p className="text-foreground text-sm">{commitment.description}</p>
-              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">{commitment.description}</p>
             )}
 
-            {commitment.deadline && (
-              <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Deadline</p>
-                <p className="text-foreground text-sm">{format(new Date(commitment.deadline), 'dd MMM yyyy, HH:mm')}</p>
-              </div>
-            )}
+            {commitment.deadline && (() => {
+              const d = new Date(commitment.deadline)
+              const active = commitment.status !== 'done' && commitment.status !== 'not_actual'
+              const overdue = active && isPast(d) && !isToday(d)
+              const dueToday = active && isToday(d)
+              return (
+                <div className={`flex items-center gap-2 text-sm ${overdue ? 'text-red-500' : dueToday ? 'text-orange-400' : 'text-foreground'}`}>
+                  <CalendarIcon size={14} className="shrink-0" />
+                  <span>{format(d, 'dd MMM yyyy, HH:mm')}</span>
+                  <span className={`text-xs ${overdue ? 'text-red-400' : dueToday ? 'text-orange-400 font-medium' : 'text-muted-foreground'}`}>
+                    {dueToday ? '· Due today' : `· ${formatDistanceToNow(d, { addSuffix: true })}`}
+                  </span>
+                </div>
+              )
+            })()}
 
             {commitment.project && (
               <div>
@@ -102,16 +113,22 @@ export default function CommitmentModal({ isOpen, onClose, commitment, defaultDe
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Executor</p>
-                <p className="text-foreground text-sm">{commitment.responsible_executor?.full_name ?? commitment.responsible_executor?.email ?? '—'}</p>
+            {(commitment.responsible_executor || commitment.responsible_checker) && (
+              <div className="grid grid-cols-2 gap-3">
+                {commitment.responsible_executor && (
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Executor</p>
+                    <p className="text-foreground text-sm">{commitment.responsible_executor.full_name ?? commitment.responsible_executor.email}</p>
+                  </div>
+                )}
+                {commitment.responsible_checker && (
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Checker</p>
+                    <p className="text-foreground text-sm">{commitment.responsible_checker.full_name ?? commitment.responsible_checker.email}</p>
+                  </div>
+                )}
               </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">Checker</p>
-                <p className="text-foreground text-sm">{commitment.responsible_checker?.full_name ?? commitment.responsible_checker?.email ?? '—'}</p>
-              </div>
-            </div>
+            )}
 
             {canEdit && (
               <div className="flex items-center justify-between pt-2 border-t border-border">
