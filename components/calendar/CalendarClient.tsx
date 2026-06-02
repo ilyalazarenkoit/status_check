@@ -6,7 +6,21 @@ import FiltersBar from '@/components/filters/FiltersBar'
 import CommitmentModal from '@/components/commitments/CommitmentModal'
 import type { Commitment, Project, Profile, CommitmentFilters } from '@/types'
 
-const CalendarView = dynamic(() => import('./CalendarView'), { ssr: false })
+function CalendarSpinner() {
+  return (
+    <div className="flex-1 flex items-center justify-center min-h-[400px]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-[#3BFF6B]/30 border-t-[#3BFF6B] animate-spin" />
+        <span className="text-xs text-muted-foreground">Loading calendar…</span>
+      </div>
+    </div>
+  )
+}
+
+const CalendarView = dynamic(() => import('./CalendarView'), {
+  ssr: false,
+  loading: () => <CalendarSpinner />,
+})
 
 interface Props {
   initialCommitments: Commitment[]
@@ -21,13 +35,16 @@ export default function CalendarClient({ initialCommitments, projects, profiles,
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedCommitment, setSelectedCommitment] = useState<Commitment | undefined>()
   const [defaultDeadline, setDefaultDeadline] = useState<string | undefined>()
+  const [isRefetching, setIsRefetching] = useState(false)
 
   const fetchCommitments = useCallback(async (activeFilters: CommitmentFilters = {}) => {
+    setIsRefetching(true)
     const params = new URLSearchParams()
     if (activeFilters.project_id) params.set('project_id', activeFilters.project_id)
     if (activeFilters.checker_id) params.set('checker_id', activeFilters.checker_id)
     const res = await fetch(`/api/commitments?${params.toString()}`)
     if (res.ok) setCommitments(await res.json())
+    setIsRefetching(false)
   }, [])
 
   function handleFilterChange(newFilters: CommitmentFilters) {
@@ -61,7 +78,15 @@ export default function CalendarClient({ initialCommitments, projects, profiles,
         filters={filters}
         onFilterChange={handleFilterChange}
       />
-      <div className="flex-1">
+      <div className="flex-1 relative">
+        {isRefetching && (
+          <div className="absolute inset-0 z-10 flex items-start justify-center pt-16 bg-background/60 backdrop-blur-[2px]">
+            <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-4 py-2 shadow-lg">
+              <div className="w-4 h-4 rounded-full border-2 border-[#3BFF6B]/30 border-t-[#3BFF6B] animate-spin" />
+              <span className="text-xs text-muted-foreground">Updating…</span>
+            </div>
+          </div>
+        )}
         <CalendarView
           commitments={commitments}
           onEventClick={handleEventClick}
